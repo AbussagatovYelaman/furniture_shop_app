@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:furniture_shop_app/config/constants.dart';
+import 'package:furniture_shop_app/providers/app_state_provider.dart';
+import 'package:furniture_shop_app/providers/auth_provider.dart';
+import 'package:furniture_shop_app/screens/onboarding/onboarding_screen.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -125,6 +129,21 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
     // Naviagte after splash animation
-    // We will implement it later
+    Future.delayed(const Duration(milliseconds: 2500), () {
+      if (mounted) {
+        final appStateProvider = Provider.of<AppStateProvider>(
+          context,
+          listen: false,
+        );
+
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+        Widget nextScreen;
+
+        if (!appStateProvider.hasSeenOnboarding) {
+          nextScreen = const OnboardingScreen();
+        }
+      }
+    });
   }
 }

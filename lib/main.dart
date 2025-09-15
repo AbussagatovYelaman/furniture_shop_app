@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:furniture_shop_app/screens/onboarding/onboarding_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:furniture_shop_app/app_starter.dart';
+import 'package:furniture_shop_app/config/theme.dart';
+import 'package:furniture_shop_app/providers/app_state_provider.dart';
+import 'package:furniture_shop_app/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ),
+  );
   runApp(const MainApp());
 }
 
@@ -10,14 +24,17 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Furniture Shop App',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (ctx) => AppStateProvider()),
+        ChangeNotifierProvider(create: (ctx) => AuthProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Furniture Shop App',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        home: const AppStarter(),
       ),
-      home: const OnboardingScreen(),
     );
   }
 }
