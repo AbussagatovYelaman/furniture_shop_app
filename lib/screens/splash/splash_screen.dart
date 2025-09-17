@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:furniture_shop_app/config/constants.dart';
+import 'package:furniture_shop_app/main_screen.dart';
 import 'package:furniture_shop_app/providers/app_state_provider.dart';
 import 'package:furniture_shop_app/providers/auth_provider.dart';
+import 'package:furniture_shop_app/screens/auth/sign_in_screen.dart';
 import 'package:furniture_shop_app/screens/onboarding/onboarding_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -142,7 +144,22 @@ class _SplashScreenState extends State<SplashScreen>
 
         if (!appStateProvider.hasSeenOnboarding) {
           nextScreen = const OnboardingScreen();
+        } else if (!authProvider.isLoggedIn) {
+          nextScreen = const SignInScreen();
+        } else {
+          nextScreen = const MainScreen();
         }
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => nextScreen,
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+            transitionDuration: const Duration(milliseconds: 800),
+          ),
+        );
       }
     });
   }

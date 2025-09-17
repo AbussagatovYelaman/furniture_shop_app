@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:furniture_shop_app/config/constants.dart';
+import 'package:furniture_shop_app/providers/app_state_provider.dart';
+import 'package:furniture_shop_app/screens/auth/sign_in_screen.dart';
+import 'package:provider/provider.dart';
 
 class OnboardingPage {
   final String image;
@@ -194,7 +197,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  void _completeOnboarding() async {}
+  void _completeOnboarding() async {
+    await Provider.of<AppStateProvider>(
+      context,
+      listen: false,
+    ).setOnboardingComplete();
+    if (!mounted) return;
+
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const SignInScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        transitionDuration: const Duration(milliseconds: 800),
+      ),
+    );
+  }
 
   void _onNextPage() {
     if (_currentPage < _pages.length - 1) {
